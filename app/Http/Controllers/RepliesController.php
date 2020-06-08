@@ -9,10 +9,12 @@ class RepliesController extends Controller
 {
 
     //adicionamos una capa de authentificacion
+    
     public function __construct()
     {
         $this->middleware('auth');
     }
+    
 
     public function store(Thread $thread)
     {
