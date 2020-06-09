@@ -51,7 +51,8 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         //Add the following line to show error when use php unit not just a warning
-        if(app()->enviroment() === 'testing') throw $exception;
+        //after add the disableExceptionHandling to TestCase.php I dont need use this
+        //if(app()->enviroment() === 'testing') throw $exception;
         
         return parent::render($request, $exception);
     }
