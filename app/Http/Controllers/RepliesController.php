@@ -16,7 +16,7 @@ class RepliesController extends Controller
     }
     
 
-    public function store(Thread $thread)
+    public function store($channel_id, Thread $thread)
     {
         $thread->addReply([
             'body' => request('body'),
