@@ -31,19 +31,9 @@ class CreateThreadsTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $this->signIn();
-
-        //When we hit the endpoint to create a new thread
-        //$thread = create('App\Thread');
-        //dd($thread->title);
-        //$this->post('/threads', $thread->toArray());
-
-        //I need create a user to get the id,or I can use $response->headres to simulate one
         $thread = make('App\Thread');
         $response = $this->post('/threads', $thread->toArray());
 
-        //Then, when we visit the thread,
-        //We should see the new thread
-        //$this->get($thread->path())
         $this->get($response->headers->get('location'))
              ->assertSee($thread->title)
              ->assertSee($thread->body);
@@ -56,15 +46,6 @@ class CreateThreadsTest extends TestCase
     {
         $this->publishThread(['title' => null])
             ->assertSessionHasErrors('title');
-        /*
-        $this->withExceptionHandling();
-        $this->signIn();
-
-        $thread = make('App\Thread', ['title' => null]);
-
-        $this->post('/threads', $thread->toArray())
-            ->assertSessionHasErrors('title');
-        */
     }
 
     /** @test */
