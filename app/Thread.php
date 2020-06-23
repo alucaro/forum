@@ -8,6 +8,16 @@ class Thread extends Model
 {
     protected $guarded = [];
 
+    //init authomatic with the program
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('replyCount', function ($builder) {
+            $builder->withCount('replies');
+        });
+    }
+
     public function path()
     {
         //any place in document you call to $thead->path(), return this path
@@ -18,6 +28,15 @@ class Thread extends Model
     {
         return $this->hasMany(Reply::class);
     }
+
+    //if I decide that replies count is something that i need everywhere
+    //put this in a global scope line 12 Thread.php
+    /*
+    public function getReplyCountAttribute()
+    {
+        return $this->replies()->count();
+    }
+    */
 
     public function creator()
     {
