@@ -7,13 +7,26 @@
             <div class="card">
                 <div class="card-header">Forum Threads</div>
 
-                <div class="panel-body">
+                <div class="panel-body m-4">
                     @foreach ($threads as $thread)
                         <article>
-                            <a href="{{ $thread->path() }}">
-                                {{ $thread->title }}
-                            </a>
+
+                            <div class="level">
+
+                                <h4 class="flex">
+                                    <a href="{{ $thread->path() }}">
+                                        {{ $thread->title }}
+                                    </a>
+                                </h4>
+
+                                <a href="{{ $thread->path() }}">
+                                    {{ $thread->replies_count }} replies
+                                </a>
+    
+                            </div>
+                            
                             <div class="body">{{ $thread->body }}</div>
+
                         </article>
                         <br>
                     @endforeach
