@@ -26,15 +26,10 @@ class Reply extends Model
             return $this->favorites()->create(['user_id' => auth()->id()]);
         }
         
+    }
 
-        /*
-        // if I wanna pass user_id on favorite($userId)
-        $attributes = ['user_id' => $userId];
-
-        if (! $this->favorites()->where($attributes)->exists()) {
-            return $this->favorites()->create($attributes);
-        }
-        */
-        
+    public function isFavorited()
+    {
+        return $this->favorites()->where('user_id', auth()->id())->exists();
     }
 }
