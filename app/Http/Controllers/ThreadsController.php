@@ -96,6 +96,8 @@ class ThreadsController extends Controller
     {
         //after filters refactor
         $threads = Thread::with('channel')->latest()->filter($filters); //reducir el numero ded queries
+        //after use global scope in Thread (protected $with = ['creator', 'channel'];) we can change this to
+        $threads = Thread::latest()->filter($filters);
 
         if($channel->exists) {
             $threads->where('channel_id', $channel->id);
