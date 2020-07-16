@@ -14,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if ($this->app->isLocal()){
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
     }
 
     /**
@@ -30,7 +32,13 @@ class AppServiceProvider extends ServiceProvider
         //});
         //For all views
         \View::composer('*', function ($view){
-            $view->with('channels', \App\Channel::all());
+            //Guarda los channels en cache y solo los recarga si hay nuevos
+            $channels = \Cache::rememberForever('channels', function() {
+                return Channel::all();
+            });
+
+            //$view->with('channels', \App\Channel::all());
+            $view->with('channels', $channels);
         });
         
         //for using in any view we can use, this work on page, but fail in test
