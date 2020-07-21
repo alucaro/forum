@@ -28,6 +28,8 @@ Route::get('/threads/{channel}','ThreadsController@index');
 Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::post('/replies/{reply}/favorites', 'FavoritesController@store');
 
+Route::get('/profiles/{user}', 'ProfilesController@show')->name('profile');
+
 //we can replace (index, create, store, show) just calling ti Route::resourse
 //Route::resource('threads', 'ThreadsController');
 

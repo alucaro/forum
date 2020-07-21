@@ -95,7 +95,7 @@ class ThreadsController extends Controller
     protected function getThreads(Channel $channel, ThreadFilters $filters)
     {
         //after filters refactor
-        $threads = Thread::with('channel')->latest()->filter($filters); //reducir el numero ded queries
+        //$threads = Thread::with('channel')->latest()->filter($filters); //reducir el numero ded queries
         //after use global scope in Thread (protected $with = ['creator', 'channel'];) we can change this to
         $threads = Thread::latest()->filter($filters);
 
