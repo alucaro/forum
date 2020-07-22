@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Thread extends Model
 {
+
+    use RecordsActivity;
+
     protected $guarded = [];
 
     protected $with = ['creator', 'channel'];
@@ -18,7 +21,25 @@ class Thread extends Model
         static::addGlobalScope('replyCount', function ($builder) {
             $builder->withCount('replies');
         });
+
+        static::deleting(function ($thread) {
+            $thread->replies()->delete();
+        });
+
+        // static::created(function ($thread) {
+        //     // Activity::create([
+        //     //     'user_id' => auth()->id(),
+        //     //     'type' => 'created_' . strtolower ((new \ReflectionClass($thread))->getShortName()), //Give us Thread instead of Forum\App\Thread
+        //     //     'subject_id' => $thread->id,
+        //     //     'subject_type' => get_class($thread)
+        //     // ]);
+        //     $thread->recordActivity('created');
+            
+        // });
+
     }
+
+    
 
     public function path()
     {
