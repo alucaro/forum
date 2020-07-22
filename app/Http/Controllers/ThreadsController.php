@@ -131,13 +131,23 @@ class ThreadsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage.  
      *
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
     public function destroy($channel, Thread $thread)
     {
+        $this->authorize('update', $thread);
+
+        if ($thread->user_id != auth()->id()){
+            // if (request()->wantsJson()) {
+            //     return response(['status' => 'Permision Denied'], 403);
+            // }
+            // return redirect('/login');
+            abort(403, 'You do not have permission to do this');
+        }
+
         $thread->replies()->delete();//first we have to delete the replies associated
         $thread->delete();
 
