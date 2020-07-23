@@ -9,33 +9,18 @@
                 <div class="card-header">
                     <h1>
                         {{ $profileUser->name }}
-                        <small>Since {{ $profileUser->created_at->diffForHumans() }}</small>
                     </h1>
                 </div>
 
-                @foreach ($threads as $thread)
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="level">
-                            <span class="flex">
-                                <a href="#">{{ $thread->creator->name }}</a> posted;
-                                <a href="{{ $thread->path() }}">{{ $thread->title }}</a>
-                            </span>
-                            
-                            <span>{{ $thread->created_at->diffForHumans() }}</span>
+                @foreach ($activities as $date => $activity)
 
-                        </div>
-                        
-                    </div>
-
-                    <div class="panel-body m-4">
-                        {{ $thread->body }}
-                    </div>
-
-                </div>
+                    <h3 class="page-header">{{ $date }}</h3>
+                    @foreach ($activity as $record)
+                        @include ("profiles.activities.{$record->type}", ['activity' => $record])
+                    @endforeach
                 @endforeach
 
-                {{ $threads->links() }}
+                
             </div>
         </div>
     </div>  
