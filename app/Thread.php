@@ -13,6 +13,10 @@ class Thread extends Model
 
     protected $with = ['creator', 'channel'];
 
+    /**
+     * Boot the model.
+     */
+
     //init authomatic with the program
     protected static function boot()
     {
@@ -23,19 +27,11 @@ class Thread extends Model
         });
 
         static::deleting(function ($thread) {
-            $thread->replies()->delete();
+             $thread->replies->each->delete();
+            // $thread->replies->each(function ($reply) {
+            //     $reply->delete();
+            // });
         });
-
-        // static::created(function ($thread) {
-        //     // Activity::create([
-        //     //     'user_id' => auth()->id(),
-        //     //     'type' => 'created_' . strtolower ((new \ReflectionClass($thread))->getShortName()), //Give us Thread instead of Forum\App\Thread
-        //     //     'subject_id' => $thread->id,
-        //     //     'subject_type' => get_class($thread)
-        //     // ]);
-        //     $thread->recordActivity('created');
-            
-        // });
 
     }
 

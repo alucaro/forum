@@ -4,7 +4,9 @@ namespace App;
 
 trait RecordsActivity
 {
-
+    /**
+     * Boot the model.
+     */
     protected static function bootRecordsActivity() //we can call the boot function here, following the notation
     //boot+nameOfTrait
     {
@@ -15,6 +17,10 @@ trait RecordsActivity
                 $model->recordActivity($event);
             });
         }
+
+        static::deleting(function ($model) {
+            $model->activity()->delete();
+        });
         
     }
 

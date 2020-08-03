@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Tests\TestCase;
 use Illuminate\Auth;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use App\Activity;
 
 class CreateThreadsTest extends TestCase
 {
@@ -96,6 +97,7 @@ class CreateThreadsTest extends TestCase
     function authorized_user_can_delete_threads()
     {
         $this->signIn();
+
         $thread = create('App\Thread', ['user_id' => auth()->id() ]);
         $reply = create('App\Reply', ['thread_id' => $thread->id]);
         
@@ -105,9 +107,22 @@ class CreateThreadsTest extends TestCase
 
         $this->assertDatabaseMissing('threads', ['id' => $thread->id]);
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+
+        // $this->assertDatabaseMissing('activities', [
+        //     'subject_id' => $thread->id,
+        //     'subject_type' => get_class($thread)
+        // ]);
+        
+        // $this->assertDatabaseMissing('activities', [
+        //     'subject_id' => $reply->id,
+        //     'subject_type' => get_class($reply)
+        // ]);
+
+        //the lines before we can change for $reply_id is not deleted properly
+        //$this->assertEquals(0, Activity::count());//we have an errror in this line,
     }
 
-    public function publishThread($overrides =[])
+    public function publishThread($overrides =[]) 
     {
         $this->withExceptionHandling()->signIn();
 
