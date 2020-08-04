@@ -21,6 +21,8 @@ try {
 
 window.axios = require('axios');
 
+window.Vue = require('vue');
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
@@ -39,3 +41,11 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+//Add a listener for a vue component
+window.events = new Vue(); //vue.$emit
+
+//the Global variables are usefull, butdont use to much
+window.flash = function(message) {
+    window.events.$emit('flash', message);
+}; //flash('My new flash message')
