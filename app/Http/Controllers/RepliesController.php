@@ -43,4 +43,11 @@ class RepliesController extends Controller
 
         return back();
     }
+
+    public function update(Reply $reply)
+    {
+        $this->authorize('update', $reply);
+        
+        $reply->update( request(['body']) );
+    }
 }

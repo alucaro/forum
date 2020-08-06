@@ -43,7 +43,7 @@
                 <form method="POST" action="{{ $thread->path() . '/replies' }}">
 
                     @csrf
-                    <div class="form-group">
+                    <div class="form-group mt-4">
                         <textarea name="body" id="body" class="form-control" placeholder="Have something to say?" rows="5"></textarea>
                     </div>
 
