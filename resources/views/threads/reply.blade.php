@@ -1,4 +1,4 @@
-<div class="card">
+<div id="reply-{{ $reply->id }}" class="card">
     <div class="card-header">
         <div class="level">
 
@@ -11,7 +11,7 @@
             <div>
                 <form method="POST" action="/replies/{{ $reply->id }}/favorites">
                     {{ csrf_field()}}
-                    <button type="submit" class="btn btn-default"  {{ $reply->isFavorited() ? 'disabled' : '' }}></button>
+                    <button type="submit" class="btn btn-default"  {{ $reply->isFavorited() ? 'disabled' : '' }}>
                         {{ $reply->favorites_count }} {{Str::plural('Favorite', $reply->favorites_count) }}
                     </button>
                 </form>
