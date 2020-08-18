@@ -25,12 +25,12 @@ class ThreadsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index( Channel $channel, ThreadFilters $filters)
+    public function index(Channel $channel, ThreadFilters $filters)
     {
-        
+
         $threads = $this->getThreads($channel, $filters);
 
-        if ( request()->wantsJson()) {
+        if (request()->wantsJson()) {
             return $threads;
         }
 
@@ -61,14 +61,14 @@ class ThreadsController extends Controller
             'channel_id' => 'required|exists:channels,id'
         ]);
 
-          $thread = Thread::create([
+        $thread = Thread::create([
             'user_id' => auth()->id(),
             'channel_id' => request('channel_id'),
             'title' => request('title'),
             'body' => request('body')
-          ]);
+        ]);
 
-          return \redirect($thread->path())
+        return \redirect($thread->path())
             ->with('flash', 'Your thread has been published');
     }
 
@@ -90,7 +90,6 @@ class ThreadsController extends Controller
             'thread' => $thread,
             'replies' => $thread->replies()->paginate(20)
         ]);
-
     }
 
     protected function getThreads(Channel $channel, ThreadFilters $filters)
@@ -100,7 +99,7 @@ class ThreadsController extends Controller
         //after use global scope in Thread (protected $with = ['creator', 'channel'];) we can change this to
         $threads = Thread::latest()->filter($filters);
 
-        if($channel->exists) {
+        if ($channel->exists) {
             $threads->where('channel_id', $channel->id);
         }
 
@@ -141,7 +140,7 @@ class ThreadsController extends Controller
     {
         $this->authorize('update', $thread);
 
-        if ($thread->user_id != auth()->id()){
+        if ($thread->user_id != auth()->id()) {
             // if (request()->wantsJson()) {
             //     return response(['status' => 'Permision Denied'], 403);
             // }
@@ -149,15 +148,13 @@ class ThreadsController extends Controller
             abort(403, 'You do not have permission to do this');
         }
 
-        $thread->replies()->delete();//first we have to delete the replies associated
+        $thread->replies()->delete(); //first we have to delete the replies associated
         $thread->delete();
 
-        if (request()->wantsJson()){
+        if (request()->wantsJson()) {
             return \response([], 204);
         }
 
         return redirect('/threads');
-        
     }
-
 }

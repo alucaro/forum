@@ -12,6 +12,9 @@ class Reply extends Model
 
     protected $with = ['owner', 'favorites'];
 
+    //any customer property to append to the array representacion of this model
+    protected $appends = ['favoritesCount', 'isFavorited'];
+
     public function owner()
     {
         return $this->belongsTo(User::class, 'user_id');
