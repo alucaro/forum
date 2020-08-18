@@ -5,6 +5,13 @@ namespace App;
 trait Favoritable
 {
 
+    protected static function bootFavoritable()
+    {
+        static::deleting(function ($model) {
+            $model->favorites->each->delete();
+        });
+    }
+
     public function favorites()
     {
         return $this->morphMany(Favorite::class, 'favorited');
@@ -20,9 +27,11 @@ trait Favoritable
 
     public function unfavorite()
     {
-        // $attributes = ['user_id' => auth()->id()];
-        // $this->favorites()->where($attributes)->delete();
-        $this->favorites()->where(['user_id' => auth()->id()])->delete();
+        $attributes = ['user_id' => auth()->id()];
+        //$this->favorites()->where($attributes)->delete();
+        //change this line because de database was not errased whe delete
+        //we have to delete the model if we like execute the query
+        $this->favorites()->where($attributes)->get()->each->delete();
     }
 
     public function isFavorited()
