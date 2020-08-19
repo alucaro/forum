@@ -23,6 +23,22 @@ window.axios = require('axios');
 
 window.Vue = require('vue');
 
+//to share something across all views
+Vue.prototype.authorize = function(handler) {
+    //ADditional admin privileges here.
+
+    //return handler(window.ApplicationCache.user);
+
+    let user = window.App.user;
+
+    // if (!user) return false;
+
+    // return handler(user);
+
+    return user ? handler(user) : false;
+
+};
+
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**

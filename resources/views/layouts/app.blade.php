@@ -10,17 +10,28 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" defer> </script>
+
+    <script type="text/ecmascript">
+        window.App = @json([
+            'csrfToken' => csrf_token(),
+            'user' => Auth::user(),
+            'signedIn' => Auth::check()
+        ]);
+    </script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
-    <!-- Styles -->
+
+
     <!-- Add styles to body -->
     <style>
         body {
@@ -37,7 +48,7 @@
         }
 
         .mr-1 {
-            margin-rigth: 1rem;
+            margin-right: 1rem;
         }
 
         [v-cloak] {

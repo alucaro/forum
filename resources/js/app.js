@@ -21,7 +21,8 @@ window.Vue = require('vue');
 
 Vue.component('flash', require('./components/Flash.vue').default);
 //register the new vue component that use on reply.btn-outline-danger
-Vue.component('reply', require('./components/Reply.vue').default);
+//Vue.component('reply', require('./components/Reply.vue').default);
+Vue.component('thread-view', require('./pages/Thread.vue').default); //use .default attribute or don't work
 
 
 /**
