@@ -27,15 +27,14 @@ class Thread extends Model
         });
 
         static::deleting(function ($thread) {
-             $thread->replies->each->delete();
+            $thread->replies->each->delete();
             // $thread->replies->each(function ($reply) {
             //     $reply->delete();
             // });
         });
-
     }
 
-    
+
 
     public function path()
     {
@@ -66,17 +65,16 @@ class Thread extends Model
 
     public function channel()
     {
-        return $this->belongsTo(Channel::class); 
+        return $this->belongsTo(Channel::class);
     }
 
     public function addReply($reply)
     {
-        $this->replies()->create($reply);
+        return $this->replies()->create($reply);
     }
 
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
     }
-
 }
