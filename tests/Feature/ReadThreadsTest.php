@@ -10,7 +10,7 @@ class ReadThreadsTest extends TestCase
 {
     use DatabaseMigrations;
 
-    public function setUp() : void
+    public function setUp(): void
     {
         parent::setUp();
         $this->thread = factory('App\Thread')->create();
@@ -24,7 +24,7 @@ class ReadThreadsTest extends TestCase
         //$response->assertSee($this->thread->title);
         //mas simplificado
         $this->get('/threads')
-             ->assertSee($this->thread->title);
+            ->assertSee($this->thread->title);
     }
 
     /** @test */
@@ -32,7 +32,6 @@ class ReadThreadsTest extends TestCase
     {
         $this->get($this->thread->path())
             ->assertSee($this->thread->title);
-
     }
 
     /** @test */
@@ -41,11 +40,11 @@ class ReadThreadsTest extends TestCase
         //Given we have a thread -> $this->thread
         //And that thread include replies
         $reply = factory('App\Reply')
-                 ->create(['thread_id' => $this->thread->id]);
+            ->create(['thread_id' => $this->thread->id]);
         //When we visit a thread page
         //Thhen we should see the replies
         $this->get($this->thread->path())
-             ->assertSee($reply->body);
+            ->assertSee($reply->body);
     }
 
     /** @test */
@@ -58,19 +57,19 @@ class ReadThreadsTest extends TestCase
 
         $this->get('/threads/' . $channel->slug)
             ->assertSee($threadInChannel->title)
-            ->assertDontSee($threadNotInChannel);//->title); esta parte no funciona
+            ->assertDontSee($threadNotInChannel); //->title); esta parte no funciona
     }
 
     /** @test */
     function a_user_can_filter_threads_by_any_name()
     {
         $this->signIn(create('App\User', ['name' => 'JhonDoe']));
-        
+
         $threadByJhon = create('App\Thread', ['user_id' => auth()->id()]);
         $threadNotByJhon = create('App\Thread');
         //dd($threadNotByJhon->title);
 
-        
+
         $this->get('threads?by=JhonDoe')
             ->assertSee($threadByJhon->title)
             ->assertDontSee($threadNotByJhon->title);
@@ -88,7 +87,7 @@ class ReadThreadsTest extends TestCase
         create('App\Reply', ['thread_id' => $threadWithThreeReplies->id], 3);
 
         $threadWithNoReplies = $this->thread;
-        
+
 
         //When I filter all threads by popularity
         $response = $this->getJson('threads?popular=1')->json();
@@ -96,5 +95,16 @@ class ReadThreadsTest extends TestCase
         //Then they should be returned from most replies to least
         $this->assertEquals([3, 2, 0], array_column($response, 'replies_count'));
     }
-    
+
+    /** @test */
+    function a_user_can_request_all_replies_for_a_given_thread()
+    {
+        $thread = create('App\Thread');
+        create('App\Reply', ['thread_id' => $thread->id], 2);
+
+        $response = $this->getJson($thread->path() . '/replies')->json();
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals(2, $response['total']);
+    }
 }

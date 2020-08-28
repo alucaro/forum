@@ -20,6 +20,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('flash', require('./components/Flash.vue').default);
+Vue.component('paginator', require('./components/Paginator.vue').default);
 //register the new vue component that use on reply.btn-outline-danger
 //Vue.component('reply', require('./components/Reply.vue').default);
 Vue.component('thread-view', require('./pages/Thread.vue').default); //use .default attribute or don't work
