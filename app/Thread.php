@@ -22,9 +22,10 @@ class Thread extends Model
     {
         parent::boot();
 
-        static::addGlobalScope('replyCount', function ($builder) {
-            $builder->withCount('replies');
-        });
+        //if added a count column in database, dont need this anymore
+        // static::addGlobalScope('replyCount', function ($builder) {
+        //     $builder->withCount('replies');
+        // });
 
         static::deleting(function ($thread) {
             $thread->replies->each->delete();
@@ -71,6 +72,10 @@ class Thread extends Model
     public function addReply($reply)
     {
         return $this->replies()->create($reply);
+        //This form works, but we going to use model
+        // $reply = $this->replies()->create($reply);
+        // $this->increment('replies_count');
+        // return $reply;
     }
 
     public function scopeFilter($query, $filters)

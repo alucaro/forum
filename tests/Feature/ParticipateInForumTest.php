@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class ParticipateInForumTest extends TestCase
 {
     use DatabaseMigrations;
-    
+
     /*
 
     function unauthenticaded_users_may_not_add_replies()
@@ -35,9 +35,8 @@ class ParticipateInForumTest extends TestCase
         $this->withExceptionHandling()
             ->post('/threads/some-channel/1/replies', [])
             ->assertRedirect(route('login'));
-
     }
-        
+
 
 
 
@@ -46,16 +45,18 @@ class ParticipateInForumTest extends TestCase
     function an_authenticated_user_may_participate_in_forum_threads()
     {
         //$user = factory('App\User')->create();
-        $this->be($user = create('App\User')); 
+        $this->be($user = create('App\User'));
 
         $thread = create('App\Thread');
-    
-        $reply = make('App\Reply');
-        
-        $this->post($thread->path().'/replies', $reply->toArray());
 
-        $this->get($thread->path())
-              ->assertSee($reply->body);
+        $reply = make('App\Reply');
+
+        $this->post($thread->path() . '/replies', $reply->toArray());
+
+        // $this->get($thread->path())
+        //       ->assertSee($reply->body);
+        $this->assertDatabaseHas('replies', ['body' => $reply->body]);
+        $this->assertEquals(1, $thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -66,9 +67,8 @@ class ParticipateInForumTest extends TestCase
         $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => null]);
 
-        $this->post($thread->path() . '/replies' , $reply->toArray())
+        $this->post($thread->path() . '/replies', $reply->toArray())
             ->assertSessionHasErrors('body');
-
     }
 
     /** @test */
@@ -98,6 +98,7 @@ class ParticipateInForumTest extends TestCase
         $this->delete("/replies/{$reply->id}")->assertStatus(302);
 
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
+        $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
 
     /** @test */
@@ -128,8 +129,8 @@ class ParticipateInForumTest extends TestCase
 
         $updatedReply = 'You been changed, fool.';
 
-        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply ]);
+        $this->patch("/replies/{$reply->id}", ['body' => $updatedReply]);
 
-        $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply ]);
+        $this->assertDatabaseHas('replies', ['id' => $reply->id, 'body' => $updatedReply]);
     }
 }
