@@ -22,13 +22,14 @@ class ThreadTest extends TestCase
     /** @test */
     function a_thread_can_make_a_string_path()
     {
-         $thread = make('App\Thread');
-         $this->assertEquals(
-             "/threads/{$thread->channel->slug}/{$thread->id}", $thread->path()
+        $thread = make('App\Thread');
+        $this->assertEquals(
+            "/threads/{$thread->channel->slug}/{$thread->id}",
+            $thread->path()
         );
     }
 
-    
+
     /** @test */
     function a_thread_has_a_creator()
     {
@@ -66,4 +67,33 @@ class ThreadTest extends TestCase
         $this->assertInstanceOf('App\Channel', $thread->channel);
     }
 
+    /** @test */
+    function a_thread_can_be_suscribed_to()
+    {
+        //Given we have a thread
+        $thread = create('App\Thread');
+
+        //And a autheiticated user
+        // $this->signIn();
+
+        //When the users suscribes to thread
+        $thread->suscribe($userId = 1);
+
+        //Then we sould be able to fetch all threads that the usedr has suscribes to;
+        $this->assertEquals(1, $thread->suscriptions()->where('user_id', $userId)->count());
+    }
+
+    /** @test */
+    function a_thread_can_be_unsuscribed_from()
+    {
+        //Given we have a thread
+        $thread = create('App\Thread');
+
+        //and a user who is suscribed to the thread
+        $thread->suscribe($userId = 1);
+
+        $thread->unsuscribe($userId);
+
+        $this->assertCount(0, $thread->suscriptions);
+    }
 }
