@@ -81,15 +81,8 @@ class ThreadsController extends Controller
      */
     public function show($channel_id, Thread $thread)
     {
-        //return Thread::withCount('replies')->find(12); //just for see result
-        //return $thread->getReplyCountAttribute();
-        //return $thread;
-        //return view('threads.show', compact('thread'));
-
+        // return $thread->append('isSubscribedTo'); //can check if the property active is append to the thread
         return view('threads.show', compact('thread'));
-        //     'thread' => $thread
-        //     // 'replies' => $thread->replies()->paginate(20)
-        // ]);
     }
 
     protected function getThreads(Channel $channel, ThreadFilters $filters)

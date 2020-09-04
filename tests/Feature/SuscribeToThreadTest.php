@@ -32,4 +32,22 @@ class SuscribeToThreadTest extends TestCase
         //A notification should be prepared for the user
         // $this->assertCount(1, auth()->user()->notifications);
     }
+
+    /** @test */
+    public function a_user_can_unsuscribe_from_thread()
+    {
+        // $this->withoutExceptionHandling();
+
+        $this->signIn();
+
+        //Given we have a Thread
+        $thread = create('App\Thread');
+
+        $thread->suscribe();
+
+        //and the user suscribe to the thread
+        $this->delete($thread->path() . '/suscriptions');
+
+        $this->assertCount(0, $thread->suscriptions);
+    }
 }

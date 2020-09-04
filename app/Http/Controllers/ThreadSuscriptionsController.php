@@ -11,4 +11,9 @@ class ThreadSuscriptionsController extends Controller
     {
         $thread->suscribe();
     }
+
+    public function destroy($channelId, Thread $thread)
+    {
+        $thread->unsuscribe();
+    }
 }
