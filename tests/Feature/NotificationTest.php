@@ -5,15 +5,24 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Notifications\DatabaseNotification;
 use Tests\TestCase;
 
 class NotificationTest extends TestCase
 {
     use DatabaseMigrations;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->signIn();
+    }
+
     /** @test */
     function a_notification_is_prepared_when_a_suscribed_thread_recives_a_new_reply()
     {
-        $this->signIn();
+
 
         $thread = create('App\Thread')->suscribe();
 
@@ -38,20 +47,17 @@ class NotificationTest extends TestCase
     function a_user_can_fetch_their_unread_notifications()
     {
         $this->withoutExceptionHandling();
-        $this->signIn();
 
-        $thread = create('App\Thread')->suscribe();
+        create(DatabaseNotification::class);
 
-        $thread->addReply([
-            'user_id' => create('App\User')->id,
-            'body' => 'Some reply here'
-        ]);
+        // $thread = create('App\Thread')->suscribe();
 
-        $user = auth()->user();
+        // $thread->addReply([
+        //     'user_id' => create('App\User')->id,
+        //     'body' => 'Some reply here'
+        // ]);
 
-        $response = $this->getJson('/profiles/{$user->name}/notifications/')->json();
-
-        $this->assertCount(1, $response);
+        $this->assertCount(1, $this->getJson('/profiles/' . auth()->user()->name . '/notifications/')->json());
     }
 
     /** @test */
@@ -59,25 +65,25 @@ class NotificationTest extends TestCase
     function a_user_can_mark_a_notification_as_read()
     {
         $this->withoutExceptionHandling();
-        $this->signIn();
 
-        $thread = create('App\Thread')->suscribe();
+        create(DatabaseNotification::class);
+        // $thread = create('App\Thread')->suscribe();
 
-        $thread->addReply([
-            'user_id' => create('App\User')->id,
-            'body' => 'Some reply here'
-        ]);
+        // $thread->addReply([
+        //     'user_id' => create('App\User')->id,
+        //     'body' => 'Some reply here'
+        // ]);
 
-        $user = auth()->user();
 
-        $this->assertCount(1, $user->unreadNotifications);
+        //tap function value in position one will be pass to the position two inmidiatly
+        tap(auth()->user(), function ($user) {
+            $this->assertCount(1, $user->unreadNotifications);
 
-        $notificationId = $user->unreadNotifications->first()->id;
+            $notificationId = $user->unreadNotifications->first()->id;
 
-        //in the video we have 
-        //$this->delete('/profiles/' . $user->name . '/notifications/{$notificationId}');
-        $this->delete('/profiles/' . $user->name . '/notifications/' . $notificationId);
+            $this->delete('/profiles/' . $user->name . '/notifications/' . $user->unreadNotifications->first()->id);
 
-        $this->assertCount(0, $user->fresh()->unreadNotifications);
+            $this->assertCount(0, $user->fresh()->unreadNotifications);
+        });
     }
 }
